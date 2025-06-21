@@ -124,8 +124,31 @@ async function createLocalCallbackServer(
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url || '/', 'http://127.0.0.1');
 
-    if (url.pathname !== '/cli-login') {
+    const origin = req.headers.origin;
+    const allowedOrigins = [UI_BASE];
+
+    if (req.method === 'OPTIONS') {
+      if (origin && allowedOrigins.includes(origin)) {
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': origin,
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        });
+      } else {
+        res.writeHead(403);
+      }
+      res.end();
       return;
+    }
+
+    if (url.pathname !== '/cli-login') {
+      res.writeHead(404);
+      res.end('Not found');
+      return;
+    }
+
+    if (origin && allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
     }
 
     const code = url.searchParams.get('code');
@@ -165,6 +188,7 @@ async function exchangeCodeForToken(
   }
 
   const { accessToken } = (await res.json()) as AccessTokenResponse;
+
   return accessToken;
 }
 
