@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish-npm-prerelease:
+  publish-npm:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -71,7 +71,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
-          version: 8
+          version: 10.12.1
           run_install: false
 
       - name: Install dependencies
