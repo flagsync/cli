@@ -1,5 +1,5 @@
 {
-  "include": ["src",  "flags.d.ts"],
+  "include": ["src",  "**/*.ts"],
   "exclude": ["node_modules", "dist", "tsup.config.ts"],
   "compilerOptions": {
     "baseUrl": "./",

@@ -16,6 +16,11 @@ Then run the `generate` command to generate TypeScript types for your feature fl
 ```sh
 npx flagsync generate
 ```
+> The generated types will be saved to `lib/flagsync/flags.d.ts`.
+> 
+> Most default `tsconfig.json` setups `include` this file via a broad pattern like `"**/*.ts"`, but if you're using a custom config, make sure it's covered by the `include` array:
+>
+> `"include": ["**/*.ts"],`
 
 ## Commands
 
