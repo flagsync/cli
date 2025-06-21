@@ -1,37 +1,20 @@
 # FlagSync CLI
 
-The **FlagSync CLI** is a tool for generating TypeScript type definitions for feature flags managed in [FlagSync](https://www.flagsync.com). It simplifies working with your FlagSync feature flags, keeping your code type-safe and reliable.
+The **FlagSync CLI** is a tool for generating TypeScript type definitions for feature flags
+managed in [FlagSync](https://www.flagsync.com), keeping your code type-safe and reliable.
 
 ## Usage
 
-Install the CLI as a dev dependency in your project:
+Get started by installing the CLI in your project:
 
 ```sh
 npm i @flagsync/cli -D
 ```
 
-## Usage
-
-Run the CLI using `npx`:
+Then run the `generate` command to generate TypeScript types for your feature flags:
 
 ```sh
 npx flagsync generate
-```
-
-Or add scripts to your `package.json`:
-
-```json
-{
-  "scripts": {
-    "flagsync:generate": "flagsync generate"
-  }
-}
-```
-
-Then run:
-
-```sh
-npm run flagsync:generate
 ```
 
 ## Commands
@@ -76,9 +59,17 @@ npx flagsync logout
 
 ## Development
 
-- Build: `pnpm build`
-- Lint: `pnpm lint`
-- Format: `pnpm format`
+```sh
+# Build the CLI
+pnpm build
+
+# Run the CLI locally
+pnpm flagsync [command]
+
+# Lint and format code
+pnpm lint
+pnpm format
+```
 
 ## Contributing
 
