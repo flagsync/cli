@@ -1,5 +1,5 @@
 {
-  "name": "@flagsync/clie",
+  "name": "@flagsync/cli",
   "version": "0.0.1",
   "description": "FlagSync CLI",
   "author": "Mike Chabot",
