@@ -1,6 +1,6 @@
 {
   "name": "@flagsync/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "FlagSync CLI",
   "author": "Mike Chabot",
   "license": "Apache-2.0",
