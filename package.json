@@ -10,9 +10,10 @@
   },
   "homepage": "https://www.flagsync.com",
   "type": "module",
-  "types": "dist/legacy/index.d.ts",
-  "main": "dist/legacy/index.cjs",
-  "module": "dist/legacy/index.js",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "bin": {
     "flagsync": "./dist/index.js"
   },
