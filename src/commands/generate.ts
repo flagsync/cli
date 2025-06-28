@@ -68,7 +68,7 @@ function extractFlagKeysAndTypesFromEnvironment(
   return environment.featureFlagStates
     .map((ffes) => ffes.featureFlag)
     .map(({ key, variants }) => {
-      const type = getTypeFromVariant(variants[0]);
+      const type = getTypeFromVariant(variants);
       if (!type) return null;
       return {
         key,
@@ -78,9 +78,9 @@ function extractFlagKeysAndTypesFromEnvironment(
     .filter(Boolean) as FlagMetadata[];
 }
 
-function getTypeFromVariant(
-  variant: FeatureFlagVariant | null | undefined,
-): string | null {
+function getTypeFromVariant(variants: FeatureFlagVariant[]): string | null {
+  const variant = variants[0];
+
   if (!variant) {
     return null;
   }
@@ -88,9 +88,9 @@ function getTypeFromVariant(
     case 'BOOL':
       return 'boolean';
     case 'STR':
-      return 'string';
+      return variants.map((v) => `"${v.stringValue}"`).join(' | ');
     case 'NUM':
-      return 'number';
+      return variants.map((v) => `${v.numberValue}`).join(' | ');
     case 'JSON':
       return 'object';
     default:
@@ -110,7 +110,55 @@ declare module "${sdkChoice}" {
 ${metadata.map((f) => `    "${f.key}": ${f.type};`).join('\n')}
   }
 }
+${
+  sdkChoice === '@flagsync/nextjs-sdk'
+    ? `
+declare module 'flags/next' {
+  type KeyedFlagDefinitionType = {
+    key: FlagKey;
+  } & FlagDefinitionType;
 
+  function flag<
+    ValueType extends JsonValue = boolean | string | number,
+    EntitiesType = any,
+    K extends FlagKey | string = FlagKey,
+  >(
+    definition: {
+      key: K;
+      decide?: (
+        this: { key: K },
+        params: {
+          headers: ReadonlyHeaders;
+          cookies: ReadonlyRequestCookies;
+          entities?: EntitiesType;
+        },
+      ) => Promise<ValueType> | ValueType;
+      identify?: (
+        params: FlagParamsType,
+      ) => Promise<EntitiesType | undefined> | EntitiesType | undefined;
+      defaultValue?: ValueType;
+      origin?: string | Origin;
+      description?: string;
+      options?: GenerousOption<ValueType>[];
+      config?: { reportValue?: boolean };
+      adapter?: Adapter<ValueType, EntitiesType>;
+    } & Omit<
+      FlagDeclaration<ValueType, EntitiesType>,
+      | 'key'
+      | 'decide'
+      | 'identify'
+      | 'defaultValue'
+      | 'origin'
+      | 'description'
+      | 'options'
+      | 'config'
+      | 'adapter'
+    >,
+  ): Flag<ValueType, EntitiesType>;
+}
+`
+    : ''
+}
 /* prettier-ignore-end */
 `.trim();
 }
