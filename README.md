@@ -1,81 +1,19 @@
 # FlagSync CLI
 
-The **FlagSync CLI** is a tool for generating TypeScript type definitions for feature flags
-managed in [FlagSync](https://www.flagsync.com), keeping your code type-safe and reliable.
+The `@flagsync/cli` bridges the gap between your feature flags in the FlagSync dashboard and your code. It automatically generates TypeScript type definitions based on your flag configurations, providing:
 
-## Usage
+* **Type Safety**: Compile-time checking for flag keys and values
+* **Auto-completion**: IntelliSense support for flag names and values
+* **Secure Authentication**: OAuth2 PKCE flow for safe credential management
 
-Get started by installing the CLI in your project:
+[![npm version](https://badge.fury.io/js/%40flagsync%2Fcli.svg)](https://badge.fury.io/js/%40flagsync%2Fcli)
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/flagsync.svg?style=social&label=Follow%20%40flagsync)](https://twitter.com/flagsync)
 
-```sh
-npm i @flagsync/cli -D
-```
+## Compatibility
 
-Then run the `generate` command to generate TypeScript types for your feature flags:
+* Compatible with Node.js 16+ and ES5.
+* TypeScript is fully supported
 
-```sh
-npx flagsync generate
-```
-> The generated types will be saved to `lib/flagsync/flags.d.ts`.
-> 
-> Most default `tsconfig.json` setups `include` this file via a broad pattern like `"**/*.ts"`, but if you're using a custom config, make sure it's covered by the `include` array:
->
-> `"include": ["**/*.ts"],`
+## Getting Started
 
-## Commands
-
-### `login`
-
-Authenticate your CLI session with your FlagSync account:
-
-```sh
-npx flagsync login
-```
-
-- Opens a browser window for authentication.
-- Prompts you to select your organization and workspace after login.
-
-### `generate`
-
-Generate TypeScript types for your feature flags:
-
-```sh
-npx flagsync generate
-```
-
-- Prompts you to select your SDK (e.g., React, Node.js).
-- Fetches your feature flags and generates a `flags.d.ts` file.
-
-### `logout`
-
-Remove your local session and credentials:
-
-```sh
-npx flagsync logout
-```
-
-## Supported SDKs
-
-- [`@flagsync/react-sdk`](https://github.com/flagsync/react-sdk)
-- [`@flagsync/js-sdk`](https://github.com/flagsync/js-sdk)
-- [`@flagsync/node-sdk`](https://github.com/flagsync/node-sdk)
-- [`@flagsync/nextjs-sdk`](https://github.com/flagsync/nextjs-sdk)
-- [`@flagsync/nestjs-sdk`](https://github.com/flagsync/nestjs-sdk)
-
-## Development
-
-```sh
-# Build the CLI
-pnpm build
-
-# Run the CLI locally
-pnpm flagsync [command]
-
-# Lint and format code
-pnpm lint
-pnpm format
-```
-
-## Contributing
-
-Contributions are welcome! Please open issues or pull requests on [GitHub](https://github.com/flagsync/cli).
+Refer to the [CLI documentation](https://docs.flagsync.com/sdks-cli/overview) for setup instructions and usage details.
