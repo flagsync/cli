@@ -1,5 +1,6 @@
 import { select } from '@inquirer/prompts';
 
+import { SDKs } from '../constants';
 import { User } from '../types';
 
 export async function promptForWorkspace(user: User): Promise<{
@@ -62,12 +63,9 @@ export async function promptForWorkspace(user: User): Promise<{
 export async function promptSdkChoice() {
   return select({
     message: 'Select your SDK:',
-    choices: [
-      { name: 'React', value: '@flagsync/react-sdk' },
-      { name: 'JavaScript', value: '@flagsync/js-sdk' },
-      { name: 'Node', value: '@flagsync/node-sdk' },
-      { name: 'Next.js', value: '@flagsync/nextjs-sdk' },
-      { name: 'Nest.js', value: '@flagsync/nestjs-sdk' },
-    ],
+    choices: SDKs.map((choice) => ({
+      name: choice.name,
+      value: choice.library,
+    })),
   });
 }

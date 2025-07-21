@@ -92,3 +92,9 @@ export type FlagMetadata = {
   key: string;
   type: 'string' | 'number' | 'boolean' | 'object';
 };
+
+export interface FlagSyncSdk {
+  name: string;
+  library: string;
+  type: 'client' | 'server';
+}
