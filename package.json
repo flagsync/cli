@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^7.5.3",
-    "axios": "^1.6.8",
     "chalk": "^5.4.1",
     "commander": "^14.0.0",
     "find-up": "^7.0.0",
