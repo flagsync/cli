@@ -100,9 +100,10 @@ function getTypeFromVariant(variants: FeatureFlagVariant[]): string | null {
 
 function generateTypes(sdkChoice: string, metadata: FlagMetadata[]): string {
   return `
-/* eslint-disable */
-/* tslint:disable */
-/* prettier-ignore-start */
+// prettier-ignore-start
+// eslint-disable
+// tslint:disable
+
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA FLAGSYNC-CLI                  ##
@@ -110,8 +111,7 @@ function generateTypes(sdkChoice: string, metadata: FlagMetadata[]): string {
  * ## AUTHOR: FlagSync                                          ##
  * ## SOURCE: https://github.com/flagsync/cli                   ##
  * ---------------------------------------------------------------
- */  
-
+ */
 import { FeatureFlags } from "${sdkChoice}";
 
 declare module "${sdkChoice}" {
@@ -119,74 +119,7 @@ declare module "${sdkChoice}" {
 ${metadata.map((f) => `    "${f.key}": ${f.type};`).join('\n')}
   }
 }
-${
-  sdkChoice === '@flagsync/nextjs-sdk'
-    ? `
-
-declare module 'flags/next' {
-  import type { JsonValue, FlagOption, Adapter } from 'flags';
-
-  type FeatureFlags = import('@flagsync/nextjs-sdk').FeatureFlags;
-
-  type FlagParamsType = {
-    headers: ReadonlyHeaders;
-    cookies: ReadonlyRequestCookies;
-  };
-
-  type Flag<K extends keyof FeatureFlags> = {
-    (): Promise<FeatureFlags[K]>;
-    key: K;
-    defaultValue?: FeatureFlags[K];
-    origin?: string | URL;
-    description?: string;
-    options?: FlagOption<FeatureFlags[K]>[];
-    config?: { reportValue?: boolean };
-    run: (options: {
-      identify:
-        | EntitiesType
-        | ((
-            params: FlagParamsType,
-          ) => Promise<EntitiesType | undefined> | EntitiesType | undefined);
-      request?: any;
-    }) => Promise<FeatureFlags[K]>;
-  };
-
-  function flag<K extends keyof FeatureFlags, EntitiesType = any>(
-    definition: {
-      key: K;
-      decide?: (
-        this: { key: K },
-        params: FlagParamsType & {
-          entities?: EntitiesType;
-        },
-      ) => Promise<FeatureFlags[K]> | FeatureFlags[K];
-      identify?: (
-        params: FlagParamsType,
-      ) => Promise<EntitiesType | undefined> | EntitiesType | undefined;
-      defaultValue?: FeatureFlags[K];
-      origin?: string | URL;
-      description?: string;
-      options?: FlagOption<FeatureFlags[K]>[];
-      config?: { reportValue?: boolean };
-      adapter?: Adapter<FeatureFlags[K], EntitiesType>;
-    } & Omit<
-      FlagDeclaration<FeatureFlags[K], EntitiesType>,
-      | 'key'
-      | 'decide'
-      | 'identify'
-      | 'defaultValue'
-      | 'origin'
-      | 'description'
-      | 'options'
-      | 'config'
-      | 'adapter'
-    >,
-  ): Flag<K>;
-}
-`
-    : ''
-}
-/* prettier-ignore-end */
+// prettier-ignore-end
 `.trim();
 }
 
