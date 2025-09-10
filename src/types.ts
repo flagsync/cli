@@ -4,8 +4,7 @@ export type CreateSessionResponse = {
 
 export type AccessTokenResponse = {
   accessToken: string;
-  expiresAt?: string;
-  context: OrgContext;
+  csrfToken: string;
 };
 
 export type WorkspaceEnvironment = {
@@ -40,8 +39,9 @@ export type OrgContext = {
 };
 
 export type StoreToken = {
-  token: string;
   context: OrgContext;
+  accessToken: string;
+  csrfToken: string;
 };
 
 export type EnvironmentGetResponse = {

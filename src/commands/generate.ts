@@ -4,7 +4,7 @@ import ora from 'ora';
 import path from 'path';
 
 import { loginAction } from '../actions';
-import { API_BASE, JWT } from '../constants';
+import { API_BASE, CookieMap } from '../constants';
 import {
   Environment,
   EnvironmentGetResponse,
@@ -49,7 +49,8 @@ async function fetchEnvironment(token: StoreToken): Promise<Environment> {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Cookie: `${JWT}=${token.token}`,
+        'x-csrf-token': token.csrfToken,
+        Cookie: `__Secure-${CookieMap.JWT}=${token.accessToken}`,
       },
     },
   );

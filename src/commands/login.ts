@@ -4,7 +4,7 @@ import http from 'http';
 import open from 'open';
 import ora from 'ora';
 
-import { API_BASE, JWT, UI_BASE } from '../constants';
+import { API_BASE, CookieMap, UI_BASE } from '../constants';
 import { AccessTokenResponse, CreateSessionResponse, User } from '../types';
 import { promptForWorkspace } from '../utils/prompts';
 import { storeToken } from '../utils/token';
@@ -39,15 +39,18 @@ export async function runLoginFlow() {
       }
       try {
         spinner.text = 'Exchanging token';
-        const token = await exchangeCodeForToken(receivedCode, codeVerifier);
+        const tokenExchange = await exchangeCodeForToken(
+          receivedCode,
+          codeVerifier,
+        );
 
         spinner.text = 'Fetching user';
-        const user = await fetchUser(token);
+        const user = await fetchUser(tokenExchange);
 
         spinner.info(`Logged in as ${chalk.cyan(user.email)}`);
 
         const context = await promptForWorkspace(user);
-        await storeToken(token, context);
+        await storeToken(tokenExchange, context);
 
         spinner.succeed(
           'Done! Run "npx flagsync generate" to generate flag types.',
@@ -176,7 +179,7 @@ async function createLocalCallbackServer(
 async function exchangeCodeForToken(
   code: string,
   codeVerifier: string,
-): Promise<string> {
+): Promise<AccessTokenResponse> {
   const res = await fetch(`${API_BASE}/cli/access-token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -187,22 +190,21 @@ async function exchangeCodeForToken(
     throw new Error(`Failed to get token: ${res.status}`);
   }
 
-  const { accessToken } = (await res.json()) as AccessTokenResponse;
-
-  return accessToken;
+  return (await res.json()) as AccessTokenResponse;
 }
 
-async function fetchUser(token: string): Promise<User> {
+async function fetchUser(tokenExchange: AccessTokenResponse): Promise<User> {
   const res = await fetch(`${API_BASE}/user/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Cookie: `${JWT}=${token}`,
+      'x-csrf-token': tokenExchange.csrfToken,
+      Cookie: `__Secure-${CookieMap.JWT}=${tokenExchange.accessToken}`,
     },
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to get user: ${res.status}`);
+    throw new Error(`Failed to get user: ${res.status} ${res.statusText}`);
   }
 
   const { user } = (await res.json()) as { user: User };

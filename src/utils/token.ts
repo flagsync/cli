@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { TOKEN_PATH } from '../constants';
-import { OrgContext, StoreToken } from '../types';
+import { AccessTokenResponse, OrgContext, StoreToken } from '../types';
 
 export function hasStoredToken(): boolean {
   return fs.existsSync(TOKEN_PATH);
@@ -18,10 +18,14 @@ export function getStoredToken(): StoreToken | null {
   }
 }
 
-export async function storeToken(token: string, context: OrgContext) {
+export async function storeToken(
+  tokenExchange: AccessTokenResponse,
+  context: OrgContext,
+) {
   const dir = path.dirname(TOKEN_PATH);
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(TOKEN_PATH, JSON.stringify({ token, context }, null, 2));
+  const storeToken: StoreToken = { ...tokenExchange, context };
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(storeToken, null, 2));
 }
 
 export async function removeToken() {
